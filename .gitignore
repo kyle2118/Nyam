@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Xcode: personal settings and build output
+xcuserdata/
+*.xcuserstate
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager caches (Package.resolved is kept on purpose)
+.build/
+.swiftpm/
+Nyam.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/configuration/
+
+dish photos/
+
+# Firebase config for this project (each setup downloads its own, see README)
+Nyam/GoogleService-Info.plist

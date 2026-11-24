@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A pair of phones. Only its two members can see or change what's inside.
+    match /households/{code} {
+      // Any signed-in phone may look up a code (needed to join it).
+      allow get: if request.auth != null;
+
+      // Creating a code: you must be its only member.
+      allow create: if request.auth != null
+        && request.resource.data.members == [request.auth.uid];
+
+      // Members can update it. A second phone may add itself while there's room.
+      allow update: if request.auth != null
+        && (request.auth.uid in resource.data.members
+            || (resource.data.members.size() < 2
+                && request.resource.data.members == resource.data.members.concat([request.auth.uid])));
+
+      // Dishes, photos and swipes: members only.
+      match /{document=**} {
+        allow read, write: if request.auth != null
+          && request.auth.uid in get(/databases/$(database)/documents/households/$(code)).data.members;
+      }
+    }
+  }
+}
